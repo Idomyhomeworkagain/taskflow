@@ -1,0 +1,61 @@
+﻿ID,Module,Role,Action,Value,MVP,MoSCoW,Status,Endpoint
+UC-01,Auth,Guest,Register by email,Gain access,true,Must,TODO,POST /api/auth/register
+UC-02,Auth,Guest,Login by email/password,Use system,true,Must,TODO,POST /api/auth/login
+UC-03,Auth,Client,Logout,End session,true,Must,TODO,POST /api/auth/logout
+UC-04,Auth,Guest,Reset password,Restore access,false,Should,TODO,POST /api/auth/reset
+UC-05,Auth,Guest,See validation errors,Fix input,true,Must,TODO,(client-side)
+UC-06,Auth,Client,Update profile,Personalize,false,Should,TODO,PUT /api/users/me
+UC-07,Auth,Client,Change password,Security,false,Should,TODO,PUT /api/users/me/password
+UC-08,Auth,Admin,Block user,Prevent abuse,false,Could,TODO,PUT /api/admin/users/:id/block
+UC-09,Auth,Admin,Assign role,Manage rights,false,Could,TODO,PUT /api/admin/users/:id/role
+UC-10,Auth,System,Log logins,Audit,false,Could,TODO,(middleware)
+UC-11,Projects,Client,Create project,Group tasks,true,Must,TODO,POST /api/projects
+UC-12,Projects,Client,List own projects,Orient,true,Must,TODO,GET /api/projects
+UC-13,Projects,Client,View project,See details,true,Must,TODO,GET /api/projects/:id
+UC-14,Projects,Client,Rename project,Keep actual,true,Must,TODO,PUT /api/projects/:id
+UC-15,Projects,Client,Delete project,Remove unused,true,Must,TODO,DELETE /api/projects/:id
+UC-16,Projects,Admin,List all projects,Control,true,Must,TODO,GET /api/admin/projects
+UC-17,Projects,Client,Archive project,Hide completed,false,Could,TODO,PUT /api/projects/:id/archive
+UC-18,Projects,Client,Filter by date,Find fast,false,Could,TODO,GET /api/projects?from=&to=
+UC-19,Projects,Client,Search by title,Find fast,false,Could,TODO,GET /api/projects?q=
+UC-20,Projects,Client,Sort projects,Order,false,Could,TODO,GET /api/projects?sort=
+UC-21,Projects,Client,Add description,Context,false,Could,TODO,PUT /api/projects/:id
+UC-22,Projects,Client,Invite member,Teamwork,false,Could,TODO,POST /api/projects/:id/members
+UC-23,Projects,Client,View stats,Progress,false,Could,TODO,GET /api/projects/:id/stats
+UC-24,Projects,Client,Export JSON,Backup,false,Could,TODO,GET /api/projects/:id/export
+UC-25,Projects,Admin,Delete any project,Moderate,false,Could,TODO,DELETE /api/admin/projects/:id
+UC-26,Tasks,Client,Create task,Fix work,true,Must,TODO,POST /api/tasks
+UC-27,Tasks,Client,List project tasks,See plan,true,Must,TODO,GET /api/tasks/project/:id
+UC-28,Tasks,Client,View task,Read details,true,Must,TODO,GET /api/tasks/:id
+UC-29,Tasks,Client,Change status,Progress,true,Must,TODO,PUT /api/tasks/:id
+UC-30,Tasks,Client,Delete task,Remove unused,true,Must,TODO,DELETE /api/tasks/:id
+UC-31,Tasks,Client,Assign user,Distribute,true,Must,TODO,PUT /api/tasks/:id
+UC-32,Tasks,Client,Set due date,Deadlines,true,Must,TODO,PUT /api/tasks/:id
+UC-33,Tasks,Client,Add priority,Highlight,false,Should,TODO,PUT /api/tasks/:id
+UC-34,Tasks,Client,Attach file,Materials,false,Should,TODO,POST /api/tasks/:id/files
+UC-35,Tasks,Client,Comment,Discuss,false,Should,TODO,POST /api/tasks/:id/comments
+UC-36,Tasks,Client,Mention user,Notify,false,Could,TODO,(comment parse)
+UC-37,Tasks,Client,Filter by status,Focus,false,Could,TODO,GET /api/tasks?status=
+UC-38,Tasks,Client,Filter by assignee,Load,false,Could,TODO,GET /api/tasks?assignee=
+UC-39,Tasks,Client,Sort by due date,Prioritize,false,Could,TODO,GET /api/tasks?sort=due
+UC-40,Tasks,Client,Bulk close,Save time,false,Could,TODO,POST /api/tasks/bulk-close
+UC-41,Tasks,Client,Kanban board,Visualize,false,Could,TODO,(UI)
+UC-42,Tasks,Client,Drag&drop,Intuitive,false,Could,TODO,(UI)
+UC-43,Tasks,Admin,See all tasks,Control,false,Could,TODO,GET /api/admin/tasks
+UC-44,Tasks,Client,Reminders,Deadlines,false,Could,TODO,(cron)
+UC-45,Tasks,Client,Subscribe task,Watch,false,Could,TODO,POST /api/tasks/:id/subscribe
+UC-46,Admin,Admin,List users,Manage,true,Must,TODO,GET /api/admin/users
+UC-47,Admin,Admin,Change role,Rights,true,Must,TODO,PUT /api/admin/users/:id/role
+UC-48,Admin,Admin,Delete user,Cleanup,true,Must,TODO,DELETE /api/admin/users/:id
+UC-49,Admin,Admin,Metrics dashboard,Understanding,false,Could,TODO,GET /api/admin/stats
+UC-50,Admin,Admin,Export CSV,BI,false,Could,TODO,GET /api/admin/export.csv
+UC-51,Admin,Admin,Action logs,Investigate,false,Could,TODO,GET /api/admin/logs
+UC-52,Reports,Client,Email notifications,Stay informed,false,Could,TODO,(SMTP)
+UC-53,Reports,Client,Light/dark theme,Comfort,false,Could,TODO,(UI)
+UC-54,Reports,Client,Offline PWA,Availability,false,Wont,TODO,(service worker)
+UC-55,Reports,Client,Share link,Sharing,false,Could,TODO,GET /s/:token
+UC-56,Reports,System,Daily DB backup,Preserve data,false,Wont,TODO,(cron+pg_dump)
+UC-57,Reports,System,Health-check,Monitoring,false,Should,TODO,GET /api/health
+UC-58,Reports,System,Rate limit,Protection,false,Wont,TODO,(middleware)
+UC-59,Reports,Client,Change history,Transparency,false,Could,TODO,GET /api/tasks/:id/history
+UC-60,Reports,Admin,Force logout,Incident response,false,Could,TODO,POST /api/admin/users/:id/logout
