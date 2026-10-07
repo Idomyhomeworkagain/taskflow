@@ -1,30 +1,44 @@
-# Node
+# --- Node.js ---
 node_modules/
 npm-debug.log*
+yarn-debug.log*
 yarn-error.log*
+.pnpm-debug.log*
 
-# Env
-.env
-.env.local
-*.env
-
-# Build
+# --- Сборка ---
 dist/
 build/
-client/dist/
+out/
+.vite/
+.cache/
 
-# Prisma
-server/prisma/migrations/dev.db*
+# --- Переменные окружения ---
+.env
+.env.local
+.env.*.local
 
-# Logs
+# --- Логи ---
 logs/
 *.log
 
-# IDE
+# --- Prisma ---
+server/prisma/migrations/*_dev/
+*.db
+*.db-journal
+
+# --- IDE / редакторы ---
 .vscode/
 .idea/
 *.swp
-.DS_Store
+*.swo
 
-# Docker
-pgdata/
+# --- ОС ---
+.DS_Store
+Thumbs.db
+
+# --- Docer (локальные тома) ---
+docker-data/
+
+# --- Тесты . coverage ---
+coverage/
+.nyc_output/
