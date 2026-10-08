@@ -1,33 +1,78 @@
-﻿import express from "express";
+import express from "express";
 import cors from "cors";
-import pg from "pg";
+import cookieParser from "cookie-parser";
 import "dotenv/config";
+import prisma from "./db.js";
+import authRoutes from "./routes/auth.js";
+import adminRoutes from "./routes/admin.js";
 
 const app = express();
-app.use(cors());
-app.use(express.json());
 
-// Health-check
+// --- Middleware ---
+app.use(
+  cors({
+    origin: ["http://localhost:3000", "http://127.0.0.1:3000"],
+    credentials: true, // обязательно для cookie
+  })
+);
+app.use(express.json());
+app.use(cookieParser());
+
+// --- Health ---
 app.get("/api/health", (_req, res) => {
   res.json({ status: "ok", service: "api", time: new Date().toISOString() });
 });
 
-// Проверка соединения с БД
 app.get("/api/db-check", async (_req, res) => {
   try {
-    const client = new pg.Client({ connectionString: process.env.DATABASE_URL });
-    await client.connect();
-    const r = await client.query("SELECT NOW() AS now");
-    await client.end();
-    res.json({ status: "ok", db_time: r.rows[0].now });
+    const [userCount, projectCount, taskCount] = await Promise.all([
+      prisma.user.count(),
+      prisma.project.count(),
+      prisma.task.count(),
+    ]);
+    res.json({
+      status: "ok",
+      counts: { users: userCount, projects: projectCount, tasks: taskCount },
+    });
   } catch (e) {
     res.status(500).json({ status: "error", message: e.message });
   }
 });
 
-// Root
+app.get("/api/seed-status", async (_req, res) => {
+  try {
+    const admin = await prisma.user.findUnique({
+      where: { email: "admin@taskflow.local" },
+      select: { id: true, email: true, role: true },
+    });
+    const client = await prisma.user.findUnique({
+      where: { email: "client@taskflow.local" },
+      select: { id: true, email: true, role: true },
+    });
+    res.json({ seeded: Boolean(admin && client), admin, client });
+  } catch (e) {
+    res.status(500).json({ status: "error", message: e.message });
+  }
+});
+
+// --- Routes ---
+app.use("/api/auth", authRoutes);
+app.use("/api/admin", adminRoutes);
+
+// --- Root ---
 app.get("/", (_req, res) => {
-  res.json({ name: "TaskFlow API", version: "0.1.0" });
+  res.json({ name: "TaskFlow API", version: "0.3.0" });
+});
+
+// --- 404 ---
+app.use((_req, res) => {
+  res.status(404).json({ error: "Not found" });
+});
+
+// --- Error handler ---
+app.use((err, _req, res, _next) => {
+  console.error("[error]", err);
+  res.status(500).json({ error: "Internal server error" });
 });
 
 const PORT = process.env.PORT || 5000;

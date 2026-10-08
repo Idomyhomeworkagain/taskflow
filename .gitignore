@@ -42,3 +42,6 @@ docker-data/
 # --- Тесты . coverage ---
 coverage/
 .nyc_output/
+
+# Prisma local env
+server/.env
