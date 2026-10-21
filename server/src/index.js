@@ -5,6 +5,7 @@ import "dotenv/config";
 import prisma from "./db.js";
 import authRoutes from "./routes/auth.js";
 import adminRoutes from "./routes/admin.js";
+import projectsRoutes from "./routes/projects.js";
 
 const app = express();
 
@@ -12,7 +13,7 @@ const app = express();
 app.use(
   cors({
     origin: ["http://localhost:3000", "http://127.0.0.1:3000"],
-    credentials: true, // обязательно для cookie
+    credentials: true,
   })
 );
 app.use(express.json());
@@ -58,10 +59,11 @@ app.get("/api/seed-status", async (_req, res) => {
 // --- Routes ---
 app.use("/api/auth", authRoutes);
 app.use("/api/admin", adminRoutes);
+app.use("/api/projects", projectsRoutes);
 
 // --- Root ---
 app.get("/", (_req, res) => {
-  res.json({ name: "TaskFlow API", version: "0.3.0" });
+  res.json({ name: "TaskFlow API", version: "0.4.0" });
 });
 
 // --- 404 ---
