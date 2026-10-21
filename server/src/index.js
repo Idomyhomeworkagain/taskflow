@@ -6,10 +6,10 @@ import prisma from "./db.js";
 import authRoutes from "./routes/auth.js";
 import adminRoutes from "./routes/admin.js";
 import projectsRoutes from "./routes/projects.js";
+import tasksRoutes from "./routes/tasks.js";
 
 const app = express();
 
-// --- Middleware ---
 app.use(
   cors({
     origin: ["http://localhost:3000", "http://127.0.0.1:3000"],
@@ -19,7 +19,6 @@ app.use(
 app.use(express.json());
 app.use(cookieParser());
 
-// --- Health ---
 app.get("/api/health", (_req, res) => {
   res.json({ status: "ok", service: "api", time: new Date().toISOString() });
 });
@@ -56,22 +55,19 @@ app.get("/api/seed-status", async (_req, res) => {
   }
 });
 
-// --- Routes ---
 app.use("/api/auth", authRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/projects", projectsRoutes);
+app.use("/api/tasks", tasksRoutes);
 
-// --- Root ---
 app.get("/", (_req, res) => {
-  res.json({ name: "TaskFlow API", version: "0.4.0" });
+  res.json({ name: "TaskFlow API", version: "0.5.0" });
 });
 
-// --- 404 ---
 app.use((_req, res) => {
   res.status(404).json({ error: "Not found" });
 });
 
-// --- Error handler ---
 app.use((err, _req, res, _next) => {
   console.error("[error]", err);
   res.status(500).json({ error: "Internal server error" });
