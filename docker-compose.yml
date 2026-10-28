@@ -1,59 +1,47 @@
-﻿services:
+﻿version: "3.9"
+
+services:
   db:
     image: postgres:16-alpine
     container_name: taskflow-db
     restart: unless-stopped
+    network_mode: host  # <-- ДОБАВЛЕНО
     environment:
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: ${POSTGRES_DB}
-    ports:
-      - "5432:5432"
+      POSTGRES_USER: ${POSTGRES_USER:-taskflow}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-taskflow_pass}
+      POSTGRES_DB: ${POSTGRES_DB:-taskflow}
     volumes:
       - db_data:/var/lib/postgresql/data
-    networks:
-      - taskflow-net
+    # ports и networks убраны
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      test: ["CMD-SHELL", "pg_isready -U taskflow"]
       interval: 5s
-      timeout: 3s
-      retries: 10
+      retries: 5
 
   api:
-    build:
-      context: ./server
-      dockerfile: Dockerfile
+    build: ./server
     container_name: taskflow-api
     restart: unless-stopped
+    network_mode: host  # <-- ДОБАВЛЕНО
     environment:
-      NODE_ENV: production
+      DATABASE_URL: postgres://taskflow:taskflow_pass@127.0.0.1:5432/taskflow  # <-- db заменён на 127.0.0.1
+      JWT_SECRET: ${JWT_SECRET:-super_secret_change_me}
       PORT: 5000
-      DATABASE_URL: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
-      JWT_SECRET: ${JWT_SECRET}
-    ports:
-      - "5000:5000"
     depends_on:
       db:
         condition: service_healthy
-    networks:
-      - taskflow-net
+    # ports и networks убраны
 
   ui:
-    build:
-      context: ./client
-      dockerfile: Dockerfile
+    build: ./client
     container_name: taskflow-ui
     restart: unless-stopped
-    ports:
-      - "3000:80"
-    depends_on:
-      - api
-    networks:
-      - taskflow-net
+    network_mode: host  # <-- ДОБАВЛЕНО
+    environment:
+      VITE_API_URL: http://127.0.0.1:5000/api  # <-- localhost заменён на 127.0.0.1
+    depends_on: [api]
+    # ports и networks убраны
 
 volumes:
   db_data:
-
-networks:
-  taskflow-net:
-    driver: bridge
+# networks убраны
